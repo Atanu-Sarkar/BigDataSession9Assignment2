@@ -1,0 +1,26 @@
+1. Find the number of students who scored less than 5(50%).
+=============================================================
+loadData  = LOAD 'studentDS.txt' USING PigStorage(',') AS (Name:chararray,ColUndertaken:chararray,Dob:chararray,Stream:chararray,Grade:float,State:chararray,City:chararray);
+noheader = filter loadData by Name != 'Name' and Grade <5;
+noheader_w_one = foreach noheader generate 1 as one;
+noheader_group = group noheader_w_one all;
+loaddata_count = foreach noheader_group generate SUM(noheader_w_one.one);
+dump loaddata_count;
+
+2. List the name of students who are from Alaska.
+=================================================================================
+load_name = filter loadData by Name != 'Name' and State == 'alaska';
+name_student = foreach load_name generate Name;
+
+3. How many government collages are there in Alabama?
+===========================================================================================
+load_name = filter loadData by Name != 'Name' and State == 'alabama' and ColUndertaken == 'goverenment' ;
+loadname_w_one = foreach load_name generate 1 as one;
+loadname_group = group loadname_w_one all;
+count_govt_college = foreach loadname_group generate SUM(loadname_w_one.one);
+dump count_govt_college;
+
+4. List the name of students who are from Oregon and persuing BE.
+========================================================================================
+load_name_be = filter loadData by Name != 'Name' and State == 'oregon' and Stream == 'BE';
+list_name_be = foreach load_nam_be generate Name;
